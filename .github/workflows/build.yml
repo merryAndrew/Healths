@@ -1,1 +1,26 @@
 
+name: 自动生成健康证
+
+on:
+  issues:
+    types: [opened, edited, closed]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: 安装依赖
+        run: pip install requests
+      - name: 生成网页
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python generate.py
+      - name: 部署到 Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
