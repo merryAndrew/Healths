@@ -3,70 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>健康证查询</title>
+    <title>健康证服务-证件查询</title>
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: "Microsoft Yahei", sans-serif; background-color: #e9e9e9; padding: 10px; }
-        .cert-wrapper { max-width: 450px; margin: 0 auto 20px auto; }
-        .cert-module { background: #f8f8f8; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.35); width: 100%; height: 180px; }
-        .top-card { font-size: 11px; display: flex; flex-direction: column; height: 100%; margin-top: 5px; }
-        .top-title { text-align: center; font-size: 16px; color: #333; margin-top: 5px; margin-bottom: 10px; font-weight: bold; }
-        .top-content { display: flex; justify-content: space-between; align-items: flex-start; flex: 1; }
-        .text-container { width: 65%; display: flex; flex-direction: column; height: 100%; }
+        body { font-family: "Microsoft Yahei", sans-serif; background-color: #e0d6c7; padding: 10px; min-height: 100vh; }
+        .app-wrapper { max-width: 450px; margin: 0 auto; }
+        .photo .seal-container { position: absolute !important; top: 44px !important; left: -47px !important; z-index: 999 !important; }
+        .photo .seal-img { width: 63px !important; height: 63px !important; object-fit: contain !important; opacity: 1 !important; display: block !important; }
+        .cert-module { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 100%; height: 180px; }
+        .top-card { font-size: 11px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .top-title { text-align: center; font-size: 16px; color: #333; font-weight: bold; }
+        .top-content { display: flex; justify-content: space-between; align-items: flex-start; }
+        .text-container { width: 65%; }
         .info-line { margin-bottom: 8px; white-space: nowrap; display: flex; align-items: center; gap: 1px; }
-        .label {} .colon {} .content { font-weight: bold; }
-        .gender-separator { margin-left: 10px; }
         .id-group { margin-bottom: 8px; }
         .id-group .info-line { margin-bottom: 0; line-height: 1.2; }
-        .last-line { margin-top: auto; margin-bottom: 10px; }
-        .photo { width: 70px; height: 90px; border: 1px solid #ddd; margin-left: 10px; }
-        .photo img { width: 100%; height: 100%; object-fit: cover; }
-        .middle-card { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18px; color: #333; text-align: center; width: 100%; height: 180px; font-weight: bold; }
+        .last-line { margin-bottom: 0; }
+        .photo { width: 70px; height: 90px; border: 1px solid #ddd; margin-left: 10px; position: relative !important; overflow: visible !important; }
+        .photo img[alt="持证人照片"] { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 1; }
+        .middle-card { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18px; color: #333; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
         .middle-line { margin: 5px 0; }
-        .bottom-card { border-radius: 12px; padding: 20px; margin-bottom: 15px; font-size: 11px; text-align: center; background: #f8f8f8; box-shadow: 0 8px 16px rgba(0,0,0,0.35); }
-        .qrcode-area { text-align: center; margin-bottom: 15px; display: flex; flex-direction: column; align-items: center; }
-        .qrcode-img { width: 120px; height: 120px; margin: 0 auto 10px; }
+        .bottom-card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 11px; }
+        .qrcode-area { text-align: center; margin-bottom: 15px; }
+        .qrcode-title { color: #333; margin-bottom: 10px; font-size: 13px; }
+        .qrcode-img { width: 140px; height: 140px; margin: 0 auto; }
         .qrcode-img img { width: 100%; height: 100%; object-fit: contain; }
-        .qrcode-title { color: #333; margin-bottom: 0; font-size: 13px; font-weight: bold; }
+        .notice { background-color: #fffbeb; border: 1px solid #ffeeba; border-radius: 8px; padding: 12px; font-size: 10px; }
+        .notice-title { color: #856404; font-weight: bold; margin-bottom: 6px; display: flex; align-items: center; }
+        .exclamation-icon { margin-right: 5px; font-size: 12px; }
+        .notice-content { color: #856404; line-height: 1.4; }
+        .gender-separator { margin-left: 15px; }
+        .cert-wrapper { margin-bottom: 20px; }
     </style>
 </head>
 <body>
-    
+    <div class="app-wrapper">
+        
         <div class="cert-wrapper" data-title="张三_1234">
             <div class="cert-module top-card">
                 <div class="top-title">广东省食品从业人员健康证明</div>
                 <div class="top-content">
                     <div class="text-container">
                         <div class="info-line">
-                            <span class="label">姓 名</span>
-                            <span class="colon">∶</span>
-                            <span class="content">张三</span>
-                            <span class="gender-separator"></span>
-                            <span class="label">性 别</span>
-                            <span class="colon">∶</span>
-                            <span class="content">男</span>
+                            <span style="font-weight: bold;">姓 名</span>
+                            <span>∶</span>
+                            <span>张三</span>
+                            <span class="gender-separator" style="font-weight: bold;">性 别</span>
+                            <span>∶</span>
+                            <span>男</span>
                         </div>
                         <div class="id-group">
                             <div class="info-line">
-                                <span class="label">身份证号码</span>
-                                <span class="colon">∶</span>
-                                <span class="content">411521200506303037</span>
+                                <span style="font-weight: bold;">身份证号码</span>
+                                <span>∶</span>
+                                <span>411521200506303037</span>
                             </div>
                             <div class="info-line">(或其它有效证明)</div>
                         </div>
                         <div class="info-line">
-                            <span class="label">体检单位</span>
-                            <span class="colon">∶</span>
-                            <span class="content">广州东仁医院</span>
+                            <span style="font-weight: bold;">体检单位</span>
+                            <span>∶</span>
+                            <span>广州东仁医院</span>
                         </div>
                         <div class="info-line last-line">
-                            <span class="label">体检日期</span>
-                            <span class="colon">∶</span>
-                            <span class="content">2026-07-18</span>
+                            <span style="font-weight: bold;">体检日期</span>
+                            <span>∶</span>
+                            <span>2026-07-18</span>
                         </div>
                     </div>
                     <div class="photo">
+                        <div class="seal-container">
+                            <img class="seal-img" src="https://raw.kkgithub.com/merryAndrew/imge/main/than.png" alt="印章图片">
+                        </div>
                         <img src="https://via.placeholder.com/70x90?text=No+Photo" alt="持证人照片">
                     </div>
                 </div>
@@ -77,10 +86,17 @@
             </div>
             <div class="bottom-card">
                 <div class="qrcode-area">
+                    <div class="qrcode-title">防伪标识二维码</div>
                     <div class="qrcode-img">
                         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAAC+0lEQVR4nO2cX26jMBCHv1mQ8uhIPUCPAjer9kh7AzhKb4AfIxnNPoxtaLrSqkoFKQxPuPhTbTGZPz9PIsqXr/HX1xlwyCGHHHLIIYeOCUm+WiC25VkUEbnWOxGRfpflObQ91Kmq6gSMrwlgFumD1rSzUVWtw5+xJ4cegmJ2ANIzi/TxohBF6CawB+ZBdlqeQ5tB7f0fuj8tCgklNkmI12/6Tw79DOiTRYxXYOxtIDq+pk9Tnn1PDj0CldcdFIhAN8wt0CSIL0kIecJayXryPTn0DdAoS11xUXmbcvZA935RYLZSY6/lObS1j7iTspUIEG6i47VB7yc8+Z4cegTCqspuAqBRHYKq6rTcgZWltQTV4cn35NAjEFovCAkIasZQhsksQgcaNd3CLeLIULaIISR756qayqOganYAjbkR9xHHh2rUaBSCKp0WzzAAeWhm4RZxBoi1Og1YCqFTk23DwoQFkRJe3CKODJWP/eouG8Mqqewm0CFUA3nyPTn0CFQzywRdqTCs9KinX9lKJo8aZ4DWmaVlFMtwAitBa3rpFnF8qOQRVYWoLuODMpHLUo8ax4dW2cPiD5bQYbbhesSJoBo1tFQYExRdqlakE3gecRJopWLn9LLUnOUuyxPLZLeIs0Clc+qi+ltadIgXZbw2Ra0I6R/QdstzaBtopVnmBHK5QmJddXgecQporWKbWdQi0/IIXI84KTSLDuEmEG4ifWyRnqxHWKfE7+uey3NoK6jqUml1pJHr0LA0TkCe4j7iHFBWJUNC5PUmdO8twJzb6DpVSzml32V5Dm0IWVddaaBskhIvOUxAo2K92PElAbPo1stzaC+onmqZjxjlovn7frHFCs9VHfoz9uTQQ1CsX+q0U61Z5K02y4wiYjGl32l5Du0Hde+1zIgiOjBLkbJn784/AbTuxc6tdan0ySxS9lSbq7zWODq07opYvXPKMUcWLtX7I84CfeyzrD5CFwG7NNnVphq3iENDov+fc3/5L5M55JBDDjnkkEMAfwG2D8e7WlbcmgAAAABJRU5ErkJggg==" alt="防伪二维码">
                     </div>
-                    <div class="qrcode-title">此健康信息已上报平台</div>
+                </div>
+                <div class="notice">
+                    <div class="notice-title">
+                        <i class="fas fa-exclamation-circle exclamation-icon"></i>
+                        关于申请实体证明通知：
+                    </div>
+                    <div class="notice-content">目前实体证明申请的入口已经关闭，全面推广电子证，请广大从业人员和用人单位积极使用。如对查询信息存疑，请与体检机构联系。</div>
                 </div>
             </div>
         </div>
@@ -91,34 +107,36 @@
                 <div class="top-content">
                     <div class="text-container">
                         <div class="info-line">
-                            <span class="label">姓 名</span>
-                            <span class="colon">∶</span>
-                            <span class="content">测试3</span>
-                            <span class="gender-separator"></span>
-                            <span class="label">性 别</span>
-                            <span class="colon">∶</span>
-                            <span class="content">男</span>
+                            <span style="font-weight: bold;">姓 名</span>
+                            <span>∶</span>
+                            <span>测试3</span>
+                            <span class="gender-separator" style="font-weight: bold;">性 别</span>
+                            <span>∶</span>
+                            <span>男</span>
                         </div>
                         <div class="id-group">
                             <div class="info-line">
-                                <span class="label">身份证号码</span>
-                                <span class="colon">∶</span>
-                                <span class="content">411521200506303037</span>
+                                <span style="font-weight: bold;">身份证号码</span>
+                                <span>∶</span>
+                                <span>411521200506303037</span>
                             </div>
                             <div class="info-line">(或其它有效证明)</div>
                         </div>
                         <div class="info-line">
-                            <span class="label">体检单位</span>
-                            <span class="colon">∶</span>
-                            <span class="content">广州东仁医院</span>
+                            <span style="font-weight: bold;">体检单位</span>
+                            <span>∶</span>
+                            <span>广州东仁医院</span>
                         </div>
                         <div class="info-line last-line">
-                            <span class="label">体检日期</span>
-                            <span class="colon">∶</span>
-                            <span class="content">2026-07-00</span>
+                            <span style="font-weight: bold;">体检日期</span>
+                            <span>∶</span>
+                            <span>2026-07-00</span>
                         </div>
                     </div>
                     <div class="photo">
+                        <div class="seal-container">
+                            <img class="seal-img" src="https://raw.kkgithub.com/merryAndrew/imge/main/than.png" alt="印章图片">
+                        </div>
                         <img src="https://github.com/user-attachments/assets/ba17a819-e79e-4c60-ae31-7b4f50970466" alt="持证人照片">
                     </div>
                 </div>
@@ -129,10 +147,17 @@
             </div>
             <div class="bottom-card">
                 <div class="qrcode-area">
+                    <div class="qrcode-title">防伪标识二维码</div>
                     <div class="qrcode-img">
                         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAAC8klEQVR4nO2cyY3jMBBFfw0F9JECHIBDoTPomDqkyUAMpQMwIB4NUPhzIIuS7UOP4Ya8qHgQtD2YhAq/FpIW4uYW/9zOAAYZZJBBBhlk0HtCUlsHROkgBwBAElmcibTLlxiTQXdBgSQ5AgjjJBwwiRzgWtjpSJI8h9brnkHrQ6oH9ZA+CPiTAKlKRlGQR3XPoNWg7vJG3OcO8BlE2hFIk/zOLxn0olAYHRFFRGSfIbLndcXi1cZk0A1NNcITQAIQ+xEAXAaSgPFz6ogELO3iycdk0D0QlhEjHItGXB30hUCSw5OPyaB7oKIRCwGI+5MGDv4kiL0DzxXi6cdk0P2QHFKtR5DfH+Xz86sHSkYKffqg7hm0utfg4HPzH46AJwGfgcBczIIDHM1rvD+kduBJcnTFDjgAKPcGr1YSxmY+Tz4mg+6BqkWEZhaDykMxi8AMQKuXZhHvD+lHBpoJqFoEZk0ufJMRs4h3h5bZZ1DbKBrB0ZFkRnEYg8+WfW4AWsQR5bq6CZSvr6UIiyM2A2kcMQJFD0owAVSNGEpE4Up4aRbx/lDTiDmAbHag+UdxGPC07HMD0JnXmL/5wk1YPWJb0EIjaiipaUY9a/MaFkdsA2pxhAYJnDVC0wz1KWYRW4DaTNdJiNQD8Ee9l3ZE3BN15ksfPP2YDLoHajXLGkrOejBnpBZHbAlaZJ8lZmgzXWoHzRhG8xpbgkp+2YpT37re9lB04yT86h/YPYNWgxaR5XzgoEWJy+VTphFvD4HnDW1pXa1LAa2ebXHEFqCSPug6OpcZP49CpEkIONYHaZcBTMK1u2fQo6DiEsa2g8eTQGrL6HwGYt+2eL3GmAz6vVyjzHmFhScBbF5js5A/1TW4Q+qAKCLVGMa2u+vlxmTQ/7erXX5IHxT4YydhyJDAqUP4K7rpb+XuGbQ6dLmni8AkCMMEAlPH2B/BWsp263fPoNWh6z1dejmvj9Aad7aa5QYg4c/vXDb7ZzKDDDLIIIMMMggA/gEBtJsXSpDD2gAAAABJRU5ErkJggg==" alt="防伪二维码">
                     </div>
-                    <div class="qrcode-title">此健康信息已上报平台</div>
+                </div>
+                <div class="notice">
+                    <div class="notice-title">
+                        <i class="fas fa-exclamation-circle exclamation-icon"></i>
+                        关于申请实体证明通知：
+                    </div>
+                    <div class="notice-content">目前实体证明申请的入口已经关闭，全面推广电子证，请广大从业人员和用人单位积极使用。如对查询信息存疑，请与体检机构联系。</div>
                 </div>
             </div>
         </div>
@@ -143,34 +168,36 @@
                 <div class="top-content">
                     <div class="text-container">
                         <div class="info-line">
-                            <span class="label">姓 名</span>
-                            <span class="colon">∶</span>
-                            <span class="content">测试4</span>
-                            <span class="gender-separator"></span>
-                            <span class="label">性 别</span>
-                            <span class="colon">∶</span>
-                            <span class="content">男</span>
+                            <span style="font-weight: bold;">姓 名</span>
+                            <span>∶</span>
+                            <span>测试4</span>
+                            <span class="gender-separator" style="font-weight: bold;">性 别</span>
+                            <span>∶</span>
+                            <span>男</span>
                         </div>
                         <div class="id-group">
                             <div class="info-line">
-                                <span class="label">身份证号码</span>
-                                <span class="colon">∶</span>
-                                <span class="content">无</span>
+                                <span style="font-weight: bold;">身份证号码</span>
+                                <span>∶</span>
+                                <span>无</span>
                             </div>
                             <div class="info-line">(或其它有效证明)</div>
                         </div>
                         <div class="info-line">
-                            <span class="label">体检单位</span>
-                            <span class="colon">∶</span>
-                            <span class="content">广州东仁医院</span>
+                            <span style="font-weight: bold;">体检单位</span>
+                            <span>∶</span>
+                            <span>广州东仁医院</span>
                         </div>
                         <div class="info-line last-line">
-                            <span class="label">体检日期</span>
-                            <span class="colon">∶</span>
-                            <span class="content">2026年7月15日 (有效期一年)</span>
+                            <span style="font-weight: bold;">体检日期</span>
+                            <span>∶</span>
+                            <span>2026年7月15日 (有效期一年)</span>
                         </div>
                     </div>
                     <div class="photo">
+                        <div class="seal-container">
+                            <img class="seal-img" src="https://raw.kkgithub.com/merryAndrew/imge/main/than.png" alt="印章图片">
+                        </div>
                         <img src="https://github.com/user-attachments/assets/11085cf6-596e-4d6a-8478-116c9138915b" alt="持证人照片">
                     </div>
                 </div>
@@ -181,10 +208,17 @@
             </div>
             <div class="bottom-card">
                 <div class="qrcode-area">
+                    <div class="qrcode-title">防伪标识二维码</div>
                     <div class="qrcode-img">
                         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADHklEQVR4nO2cX4rjMAzGv28dmEcHeoAeJbnBHmmYI80N4qP0AIX4seDw7YMdN+0s7M52SfpHfihpkh+VQEiyJJfCt1f48X0GMMgggwwyyCCDnhNiWQ0Q2IA9ACCSiyuyfn0InQy6CeokSSMAYKIGTGQPV9NOJ0nSJbSeeAatD83+gO8jwD6+CfAnArG4jOxBthLPoNWg5ssdnxoBCULcCYgT/88vGfSwkBMCSXKfQO71tWLxeDoZ9Ndr9hFeACKA0B4bAS4BkVD4OTVCBJZ2cec6GXQLhGXGCCd04+8+5hc6SRruXCeDboGyj1g4gLBP86U/EaF10KWHuHudDLodYh9LPUI6MKeS+miBsiOdn24knkEbRA2favxwAny5h04pm4UGOFnUeH4o28HCGDolaAAAeEmDrw/G+WWziGeGLizCn69ms+iUAMzVS7OIl4ECSQ2RZB8bSIc38X02Bg0+oUSSbcQzaIPd5zJ70OATpNFJUkIOGENOK8xHPDm0yCxx1dDqpFqKsDziZaBiEbn3qeIeyoOxBIy8zaj2Yhbx1NBlzRJATRw0eOlsFjmmWNR4eqhGjeWHNJ7DhNUjXguqUaPuK2pRQpd9DcsjXgvKIzJzCvHROrH3JwKYmHsdod1QPINWg2qnK0GIhOCPVL4Xd0LYC2Vkxh/nxsad62TQ7RD72GBZg8JUJmb6SEqHBhrim9hvIp5BW0AT2UeyxA84SQcyl7JD68T3cSpfH0Yng/5h1Rmq1JRBKkxEd2gSu0+A8CMAf6Qsj3gNqM48OBFxl9iNu5TnZMI+Neg+mV9jd65a3LlOBt0CLWaoBJS9xmL6OrQAugEo9jKsK55Bq0PZImYTcElhf6KAicp+AwAQdwnl3rriGbQVVM90sc9HdpyAWEOKTzm93Eo8g9avWY5AqU9KmodlzsNVgPU1XhUKbTnEpSE2eZSmGMNYT3c9mk4GfWdd+4gyO5Nw7pCXlsZo3fBXgK7PdOUQ0Q1TviL8ESqlbLe+eAatDn0906W53VXnI8p89jzAbz7iqSHqz+9cL/tnMoMMMsgggwwyCAB+Ae6RSIrRVycqAAAAAElFTkSuQmCC" alt="防伪二维码">
                     </div>
-                    <div class="qrcode-title">此健康信息已上报平台</div>
+                </div>
+                <div class="notice">
+                    <div class="notice-title">
+                        <i class="fas fa-exclamation-circle exclamation-icon"></i>
+                        关于申请实体证明通知：
+                    </div>
+                    <div class="notice-content">目前实体证明申请的入口已经关闭，全面推广电子证，请广大从业人员和用人单位积极使用。如对查询信息存疑，请与体检机构联系。</div>
                 </div>
             </div>
         </div>
@@ -195,34 +229,36 @@
                 <div class="top-content">
                     <div class="text-container">
                         <div class="info-line">
-                            <span class="label">姓 名</span>
-                            <span class="colon">∶</span>
-                            <span class="content">测试5</span>
-                            <span class="gender-separator"></span>
-                            <span class="label">性 别</span>
-                            <span class="colon">∶</span>
-                            <span class="content">男</span>
+                            <span style="font-weight: bold;">姓 名</span>
+                            <span>∶</span>
+                            <span>测试5</span>
+                            <span class="gender-separator" style="font-weight: bold;">性 别</span>
+                            <span>∶</span>
+                            <span>男</span>
                         </div>
                         <div class="id-group">
                             <div class="info-line">
-                                <span class="label">身份证号码</span>
-                                <span class="colon">∶</span>
-                                <span class="content">411521200506303037</span>
+                                <span style="font-weight: bold;">身份证号码</span>
+                                <span>∶</span>
+                                <span>411521200506303037</span>
                             </div>
                             <div class="info-line">(或其它有效证明)</div>
                         </div>
                         <div class="info-line">
-                            <span class="label">体检单位</span>
-                            <span class="colon">∶</span>
-                            <span class="content">广州东仁医院</span>
+                            <span style="font-weight: bold;">体检单位</span>
+                            <span>∶</span>
+                            <span>广州东仁医院</span>
                         </div>
                         <div class="info-line last-line">
-                            <span class="label">体检日期</span>
-                            <span class="colon">∶</span>
-                            <span class="content">2026年7月15日 (有效期一年)</span>
+                            <span style="font-weight: bold;">体检日期</span>
+                            <span>∶</span>
+                            <span>2026年7月15日 (有效期一年)</span>
                         </div>
                     </div>
                     <div class="photo">
+                        <div class="seal-container">
+                            <img class="seal-img" src="https://raw.kkgithub.com/merryAndrew/imge/main/than.png" alt="印章图片">
+                        </div>
                         <img src="https://github.com/user-attachments/assets/a56e61f1-ae1a-47da-bf35-34bac75ae737" alt="持证人照片">
                     </div>
                 </div>
@@ -233,14 +269,22 @@
             </div>
             <div class="bottom-card">
                 <div class="qrcode-area">
+                    <div class="qrcode-title">防伪标识二维码</div>
                     <div class="qrcode-img">
                         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADEUlEQVR4nO2cQY6jMBBFXw2WsgSpD5CjwM1ac6S5QThKDhDJXrZk9GdhOyGj3vR0D0wnxQIB4YlCWFX1q+yY+PA2//g4Aw455JBDDjnk0GNCVrcA8wA2JTObkhmzBSC1G6ZdzHNoQwhJEqMkKXZqpxmdeokxAuPqB0mn//ydHPoKKDUHUJ1CAFiM+ZjLDcWD7GWeQ5tB4b2Lmo9VlIp0EKQveJJD3wN6Z0QsxhjB6AH6jI2/vuBJDn0PqI2IXkACo4/ligAZ/SVcT7c3z6G9oNnMzAZgPAdsSnXHeD4IWIrU2Ms8h7b2ETcHoHnoEAk0Dxjz8c2qB9nDPIc2h1jLTTrBTXMWCdp2t83V5yNDq8zS6C8GyRAII73Ixois3rYExtO25jm0E6SfFkoKoVNfCxA1YEDxFjalg+6g7cxzaPOoIcVO0Gegl6RIqVlKqgGjhhOPGk8Czcc3Kz5C50AZG2NcjNkOYjYznXY0z6EdfAQtYPTS6qj0OiK0bNN9xINDLSQA5cMDRXWUThd9+/XUbvYR8QRQ+fqlq1XU52LAUmPFGDvZq/I9tJ15Dm2uPm08h2wQEClkoCuf3yBkkYB5uGxvnkP7Qn2G+ZgxO2bsNXZi1JuZHd88s3wWaKU+S81yLONA5ahOm2nJp2eWjw/ddcP7WLsZpJdcjsYImodLEH0O2to8hzaHrv2KTI0LRWFkgCY8uatVuY94aGg9IqoO7UrjqxQgoGvaVNmjxtNAZhawKZlJcTFIgZZWLCZ5X+N5oBYIrp6hbLceRmuOr3JM9xGPDLX5ERGq4GgTIuB2BFT94SPi0aH1TJja4szXgAE3b+G9z6eCbmu6pPPhbjBEqMs30rUB+i3eyaFPQdcalE1QCpc6sbRVfn1mnWV8j3dy6LN5xHoxX7wmmq33WcKJ1yOeDmqL+Vrbk6JIO7V5+vua59DmUKlV/Ry6UqvSCbCpCQ6bdjbPoX8O/bmmC9IAoxYDumzQZZuHiCDjfY3Hh1ZzqKgV6+5aym7z62opwvOIZ4DM/5nMIYcccsghhxz6S+g3OZJll/hsIv4AAAAASUVORK5CYII=" alt="防伪二维码">
                     </div>
-                    <div class="qrcode-title">此健康信息已上报平台</div>
+                </div>
+                <div class="notice">
+                    <div class="notice-title">
+                        <i class="fas fa-exclamation-circle exclamation-icon"></i>
+                        关于申请实体证明通知：
+                    </div>
+                    <div class="notice-content">目前实体证明申请的入口已经关闭，全面推广电子证，请广大从业人员和用人单位积极使用。如对查询信息存疑，请与体检机构联系。</div>
                 </div>
             </div>
         </div>
         
+    </div>
     <script>
         (function() {
             const params = new URLSearchParams(window.location.search);
