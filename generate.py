@@ -9,34 +9,27 @@ REPO = os.getenv('GITHUB_REPOSITORY')
 TOKEN = os.getenv('GITHUB_TOKEN')
 USER = REPO.split('/')[0] if REPO else 'merryAndrew'
 
-# 获取所有 Issue（包括评论）
 url = f'https://api.github.com/repos/{REPO}/issues?state=all&per_page=100'
 headers = {'Authorization': f'token {TOKEN}', 'Accept': 'application/vnd.github.v3+json'}
 issues = requests.get(url, headers=headers).json()
 
 print(f"📡 获取到 {len(issues)} 个 Issue")
 
-# ---------- 辅助函数：从文本中提取第一张图片链接 ----------
 def extract_first_image(text):
-    # 匹配 markdown 格式 ![]()
     match = re.search(r'!\[.*?\]\((https?://[^\s]+)\)', text)
     if match:
         return match.group(1)
-    # 匹配 <img> 标签里的 src
     match = re.search(r'<img[^>]+src="(https?://[^\s"]+)"', text)
     if match:
         return match.group(1)
-    # 匹配任何以 http 开头的图片链接（宽松匹配）
     match = re.search(r'(https?://[^\s]+\.(?:png|jpg|jpeg|gif|webp|svg))', text)
     if match:
         return match.group(1)
     return None
 
-# ---------- 生成卡片 ----------
 def build_card(issue, style='A'):
     title = issue['title']
     body = issue['body'] or ''
-    # 获取评论（用于提取图片）
     comments_url = issue['comments_url']
     comments = requests.get(comments_url, headers=headers).json()
     all_text = body
@@ -46,18 +39,14 @@ def build_card(issue, style='A'):
     gender = re.search(r'性别[：:]\s*(.+)', all_text)
     date = re.search(r'体检日期[：:]\s*(.+)', all_text)
     id_num = re.search(r'身份证[：:]\s*(.+)', all_text)
-    
-    # 提取图片
     img_url = extract_first_image(all_text)
     if not img_url:
         img_url = 'https://via.placeholder.com/70x90?text=No+Photo'
-    
     print(f"📸 标题 '{title}' 的图片链接: {img_url}")
 
     name = title.split('_')[0] if '_' in title else title
     date_display = date.group(1) if date else '未选择日期 (有效期一年)'
 
-    # 生成专属二维码
     page_url = f'https://{USER}.github.io/Healths/?id={title}'
     qr = qrcode.make(page_url)
     buffered = BytesIO()
@@ -182,7 +171,6 @@ def build_card(issue, style='A'):
         </div>
         '''
 
-# ---------- 生成所有卡片 ----------
 cards_A = []
 cards_B = []
 for issue in issues:
@@ -194,18 +182,13 @@ for issue in issues:
 cards_A.reverse()
 cards_B.reverse()
 
-# ---------- HTML 模板（A 和 B） ----------
-# 为了简洁，A和B的样式代码省略（和之前一样），但功能完全保留。
-# 实际代码中请确保包含了完整的样式。
-# 这里为了手机粘贴方便，我用变量占位，但最终输出时必须包含完整样式。
-
-# 由于篇幅，我把 A 和 B 的完整样式放在下面，确保直接可用。
+# ========== A 样式（截图版）标题改为“健康证服务-证件查询” ==========
 html_A = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>健康证卡片（截图版）</title>
+    <title>健康证服务-证件查询</title>
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
@@ -268,6 +251,7 @@ html_A = f'''<!DOCTYPE html>
 </body>
 </html>'''
 
+# B 样式（用户扫码版）标题保持“健康证查询”不变
 html_B = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -328,11 +312,10 @@ html_B = f'''<!DOCTYPE html>
 </body>
 </html>'''
 
-# ---------- 写入文件 ----------
 os.makedirs('dist', exist_ok=True)
 with open('dist/index.html', 'w', encoding='utf-8') as f:
-    f.write(html_B)          # 主页 B 样式
+    f.write(html_B)
 with open('dist/card.html', 'w', encoding='utf-8') as f:
-    f.write(html_A)          # 截图 A 样式
+    f.write(html_A)
 
-print("✅ 生成成功！已生成 index.html (B样式) 和 card.html (A样式)")
+print("✅ 生成成功！已生成 index.html (B样式) 和 card.html (A样式，标题已改为「健康证服务-证件查询」)")
