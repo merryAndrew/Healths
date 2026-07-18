@@ -1,21 +1,28 @@
 import os
 import requests
 import re
+import qrcode
+from io import BytesIO
+import base64
 
 REPO = os.getenv('GITHUB_REPOSITORY')
 TOKEN = os.getenv('GITHUB_TOKEN')
+USER = REPO.split('/')[0] if REPO else 'merryAndrew'
 
+# 获取所有 Issue
 url = f'https://api.github.com/repos/{REPO}/issues?state=all&per_page=100'
 headers = {'Authorization': f'token {TOKEN}'}
 issues = requests.get(url, headers=headers).json()
 
-cards = []
+cards_html = []
 for issue in issues:
     if 'pull_request' in issue:
         continue
     title = issue['title']
     body = issue['body'] or ''
+    number = issue['number']
 
+    # 提取字段
     gender = re.search(r'性别[：:]\s*(.+)', body)
     date = re.search(r'体检日期[：:]\s*(.+)', body)
     id_num = re.search(r'身份证[：:]\s*(.+)', body)
@@ -25,70 +32,82 @@ for issue in issues:
     name = title.split('_')[0] if '_' in title else title
     date_display = date.group(1) if date else '未选择日期'
 
+    # 生成专属二维码（内容：带 ?id=标题 的链接）
+    page_url = f'https://{USER}.github.io/Healths/?id={title}'
+    qr = qrcode.make(page_url)
+    buffered = BytesIO()
+    qr.save(buffered, format="PNG")
+    qr_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+    # 构建单张证的HTML（三个模块用 wrapper 包起来，方便根据 id 显示/隐藏）
     card = f'''
-    <div class="cert-module top-card">
-        <div class="top-title">广东省食品从业人员健康证明</div>
-        <div class="top-content">
-            <div class="text-container">
-                <div class="info-line">
-                    <span style="font-weight: bold;">姓 名</span>
-                    <span>∶</span>
-                    <span id="displayName">{name}</span>
-                    <span class="gender-separator" style="font-weight: bold;">性 别</span>
-                    <span>∶</span>
-                    <span id="displayGender">{gender.group(1) if gender else '男'}</span>
-                </div>
-                <div class="id-group">
+    <div class="cert-wrapper" data-title="{title}">
+        <div class="cert-module top-card">
+            <div class="top-title">广东省食品从业人员健康证明</div>
+            <div class="top-content">
+                <div class="text-container">
                     <div class="info-line">
-                        <span style="font-weight: bold;">身份证号码</span>
+                        <span style="font-weight: bold;">姓 名</span>
                         <span>∶</span>
-                        <span id="displayId">{id_num.group(1) if id_num else '无'}</span>
+                        <span>{name}</span>
+                        <span class="gender-separator" style="font-weight: bold;">性 别</span>
+                        <span>∶</span>
+                        <span>{gender.group(1) if gender else '男'}</span>
                     </div>
-                    <div class="info-line">(或其它有效证明)</div>
+                    <div class="id-group">
+                        <div class="info-line">
+                            <span style="font-weight: bold;">身份证号码</span>
+                            <span>∶</span>
+                            <span>{id_num.group(1) if id_num else '无'}</span>
+                        </div>
+                        <div class="info-line">(或其它有效证明)</div>
+                    </div>
+                    <div class="info-line">
+                        <span style="font-weight: bold;">体检单位</span>
+                        <span>∶</span>
+                        <span>广州东仁医院</span>
+                    </div>
+                    <div class="info-line last-line">
+                        <span style="font-weight: bold;">体检日期</span>
+                        <span>∶</span>
+                        <span>{date_display}</span>
+                    </div>
                 </div>
-                <div class="info-line">
-                    <span style="font-weight: bold;">体检单位</span>
-                    <span>∶</span>
-                    <span>广州东仁医院</span>
+                <div class="photo">
+                    <div class="seal-container">
+                        <img class="seal-img" src="https://raw.githubusercontent.com/merryAndrew/imge/main/than.png" alt="印章图片">
+                    </div>
+                    <img src="{img_url}" alt="持证人照片">
                 </div>
-                <div class="info-line last-line">
-                    <span style="font-weight: bold;">体检日期</span>
-                    <span>∶</span>
-                    <span id="displayDate">{date_display}</span>
-                </div>
-            </div>
-            <div class="photo">
-                <div class="seal-container">
-                    <img class="seal-img" src="https://raw.githubusercontent.com/merryAndrew/imge/main/than.png" alt="印章图片">
-                </div>
-                <img src="{img_url}" alt="持证人照片">
-            </div>
-        </div>
-    </div>
-    <div class="cert-module middle-card">
-        <div class="middle-line">广东省食品从业人员</div>
-        <div class="middle-line">健康证明</div>
-    </div>
-    <div class="bottom-card">
-        <div class="qrcode-area">
-            <div class="qrcode-title">防伪标识二维码</div>
-            <div class="qrcode-img">
-                <img src="https://raw.githubusercontent.com/merryAndrew/imge/main/two.png" alt="防伪二维码">
             </div>
         </div>
-        <div class="notice">
-            <div class="notice-title">
-                <i class="fas fa-exclamation-circle exclamation-icon"></i>
-                关于申请实体证明通知：
+        <div class="cert-module middle-card">
+            <div class="middle-line">广东省食品从业人员</div>
+            <div class="middle-line">健康证明</div>
+        </div>
+        <div class="bottom-card">
+            <div class="qrcode-area">
+                <div class="qrcode-title">防伪标识二维码</div>
+                <div class="qrcode-img">
+                    <img src="data:image/png;base64,{qr_base64}" alt="防伪二维码">
+                </div>
             </div>
-            <div class="notice-content">目前实体证明申请的入口已经关闭，全面推广电子证，请广大从业人员和用人单位积极使用。如对查询信息存疑，请与体检机构联系。</div>
+            <div class="notice">
+                <div class="notice-title">
+                    <i class="fas fa-exclamation-circle exclamation-icon"></i>
+                    关于申请实体证明通知：
+                </div>
+                <div class="notice-content">目前实体证明申请的入口已经关闭，全面推广电子证，请广大从业人员和用人单位积极使用。如对查询信息存疑，请与体检机构联系。</div>
+            </div>
         </div>
     </div>
     '''
-    cards.append(card)
+    cards_html.append(card)
 
-cards.reverse()
+# 倒序（最新的在前）
+cards_html.reverse()
 
+# 生成完整的 HTML，包含 JavaScript 实现“单证详情”功能
 html_template = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -125,12 +144,37 @@ html_template = f'''<!DOCTYPE html>
         .exclamation-icon {{ margin-right: 5px; font-size: 12px; }}
         .notice-content {{ color: #856404; line-height: 1.4; }}
         .gender-separator {{ margin-left: 15px; }}
+        .cert-wrapper {{ margin-bottom: 20px; }}
     </style>
 </head>
 <body>
     <div class="app-wrapper">
-        {''.join(cards)}
+        {''.join(cards_html)}
     </div>
+    <script>
+        (function() {{
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            if (id) {{
+                // 隐藏所有卡片
+                const wrappers = document.querySelectorAll('.cert-wrapper');
+                let found = false;
+                wrappers.forEach(w => {{
+                    const title = w.getAttribute('data-title');
+                    if (title === id) {{
+                        w.style.display = 'block';
+                        found = true;
+                    }} else {{
+                        w.style.display = 'none';
+                    }}
+                }});
+                // 如果没找到匹配的，显示全部（防止出错）
+                if (!found) {{
+                    wrappers.forEach(w => w.style.display = 'block');
+                }}
+            }}
+        }})();
+    </script>
 </body>
 </html>'''
 
