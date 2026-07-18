@@ -9,30 +9,55 @@ REPO = os.getenv('GITHUB_REPOSITORY')
 TOKEN = os.getenv('GITHUB_TOKEN')
 USER = REPO.split('/')[0] if REPO else 'merryAndrew'
 
+# 获取所有 Issue（包括评论）
 url = f'https://api.github.com/repos/{REPO}/issues?state=all&per_page=100'
-headers = {'Authorization': f'token {TOKEN}'}
+headers = {'Authorization': f'token {TOKEN}', 'Accept': 'application/vnd.github.v3+json'}
 issues = requests.get(url, headers=headers).json()
 
-# ---------- 辅助函数：生成单张卡片 HTML ----------
+print(f"📡 获取到 {len(issues)} 个 Issue")
+
+# ---------- 辅助函数：从文本中提取第一张图片链接 ----------
+def extract_first_image(text):
+    # 匹配 markdown 格式 ![]()
+    match = re.search(r'!\[.*?\]\((https?://[^\s]+)\)', text)
+    if match:
+        return match.group(1)
+    # 匹配 <img> 标签里的 src
+    match = re.search(r'<img[^>]+src="(https?://[^\s"]+)"', text)
+    if match:
+        return match.group(1)
+    # 匹配任何以 http 开头的图片链接（宽松匹配）
+    match = re.search(r'(https?://[^\s]+\.(?:png|jpg|jpeg|gif|webp|svg))', text)
+    if match:
+        return match.group(1)
+    return None
+
+# ---------- 生成卡片 ----------
 def build_card(issue, style='A'):
     title = issue['title']
     body = issue['body'] or ''
-    gender = re.search(r'性别[：:]\s*(.+)', body)
-    date = re.search(r'体检日期[：:]\s*(.+)', body)
-    id_num = re.search(r'身份证[：:]\s*(.+)', body)
+    # 获取评论（用于提取图片）
+    comments_url = issue['comments_url']
+    comments = requests.get(comments_url, headers=headers).json()
+    all_text = body
+    for comment in comments:
+        all_text += ' ' + comment.get('body', '')
+
+    gender = re.search(r'性别[：:]\s*(.+)', all_text)
+    date = re.search(r'体检日期[：:]\s*(.+)', all_text)
+    id_num = re.search(r'身份证[：:]\s*(.+)', all_text)
     
-    # ---------- 修复图片匹配逻辑 ----------
-    # 先尝试匹配 ![]() 格式
-    img_match = re.search(r'!\[.*?\]\((https?://[^\s]+)\)', body)
-    if not img_match:
-        # 如果没找到，尝试匹配 <img> 标签里的 src
-        img_match = re.search(r'<img[^>]+src="(https?://[^\s"]+)"', body)
-    img_url = img_match.group(1) if img_match else 'https://via.placeholder.com/70x90?text=No+Photo'
+    # 提取图片
+    img_url = extract_first_image(all_text)
+    if not img_url:
+        img_url = 'https://via.placeholder.com/70x90?text=No+Photo'
     
+    print(f"📸 标题 '{title}' 的图片链接: {img_url}")
+
     name = title.split('_')[0] if '_' in title else title
     date_display = date.group(1) if date else '未选择日期 (有效期一年)'
 
-    # 生成专属二维码（base64）
+    # 生成专属二维码
     page_url = f'https://{USER}.github.io/Healths/?id={title}'
     qr = qrcode.make(page_url)
     buffered = BytesIO()
@@ -40,7 +65,6 @@ def build_card(issue, style='A'):
     qr_base64 = base64.b64encode(buffered.getvalue()).decode()
 
     if style == 'A':
-        # ---------- A 样式：精美卡片 ----------
         return f'''
         <div class="cert-wrapper" data-title="{title}">
             <div class="cert-module top-card">
@@ -104,7 +128,6 @@ def build_card(issue, style='A'):
         </div>
         '''
     else:
-        # ---------- B 样式：纯净版 ----------
         return f'''
         <div class="cert-wrapper" data-title="{title}">
             <div class="cert-module top-card">
@@ -171,7 +194,12 @@ for issue in issues:
 cards_A.reverse()
 cards_B.reverse()
 
-# ---------- A 样式完整 HTML ----------
+# ---------- HTML 模板（A 和 B） ----------
+# 为了简洁，A和B的样式代码省略（和之前一样），但功能完全保留。
+# 实际代码中请确保包含了完整的样式。
+# 这里为了手机粘贴方便，我用变量占位，但最终输出时必须包含完整样式。
+
+# 由于篇幅，我把 A 和 B 的完整样式放在下面，确保直接可用。
 html_A = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -240,7 +268,6 @@ html_A = f'''<!DOCTYPE html>
 </body>
 </html>'''
 
-# ---------- B 样式完整 HTML ----------
 html_B = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -301,11 +328,11 @@ html_B = f'''<!DOCTYPE html>
 </body>
 </html>'''
 
-# ---------- 写入 dist 目录 ----------
+# ---------- 写入文件 ----------
 os.makedirs('dist', exist_ok=True)
 with open('dist/index.html', 'w', encoding='utf-8') as f:
-    f.write(html_B)          # ⬅️ 主页用 B 样式（用户扫码）
+    f.write(html_B)          # 主页 B 样式
 with open('dist/card.html', 'w', encoding='utf-8') as f:
-    f.write(html_A)          # ⬅️ card.html 用 A 样式（你截图）
+    f.write(html_A)          # 截图 A 样式
 
 print("✅ 生成成功！已生成 index.html (B样式) 和 card.html (A样式)")
