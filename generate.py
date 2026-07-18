@@ -13,15 +13,22 @@ url = f'https://api.github.com/repos/{REPO}/issues?state=all&per_page=100'
 headers = {'Authorization': f'token {TOKEN}'}
 issues = requests.get(url, headers=headers).json()
 
-# ---------- 辅助函数：生成单张卡片 HTML（可切换样式） ----------
+# ---------- 辅助函数：生成单张卡片 HTML ----------
 def build_card(issue, style='A'):
     title = issue['title']
     body = issue['body'] or ''
     gender = re.search(r'性别[：:]\s*(.+)', body)
     date = re.search(r'体检日期[：:]\s*(.+)', body)
     id_num = re.search(r'身份证[：:]\s*(.+)', body)
+    
+    # ---------- 修复图片匹配逻辑 ----------
+    # 先尝试匹配 ![]() 格式
     img_match = re.search(r'!\[.*?\]\((https?://[^\s]+)\)', body)
+    if not img_match:
+        # 如果没找到，尝试匹配 <img> 标签里的 src
+        img_match = re.search(r'<img[^>]+src="(https?://[^\s"]+)"', body)
     img_url = img_match.group(1) if img_match else 'https://via.placeholder.com/70x90?text=No+Photo'
+    
     name = title.split('_')[0] if '_' in title else title
     date_display = date.group(1) if date else '未选择日期 (有效期一年)'
 
@@ -33,7 +40,7 @@ def build_card(issue, style='A'):
     qr_base64 = base64.b64encode(buffered.getvalue()).decode()
 
     if style == 'A':
-        # ---------- A 样式：精美卡片（带背景、印章、完整装饰） ----------
+        # ---------- A 样式：精美卡片 ----------
         return f'''
         <div class="cert-wrapper" data-title="{title}">
             <div class="cert-module top-card">
@@ -97,7 +104,7 @@ def build_card(issue, style='A'):
         </div>
         '''
     else:
-        # ---------- B 样式：纯净代码（简洁） ----------
+        # ---------- B 样式：纯净版 ----------
         return f'''
         <div class="cert-wrapper" data-title="{title}">
             <div class="cert-module top-card">
@@ -152,7 +159,7 @@ def build_card(issue, style='A'):
         </div>
         '''
 
-# ---------- 生成所有卡片（分别用于A/B样式） ----------
+# ---------- 生成所有卡片 ----------
 cards_A = []
 cards_B = []
 for issue in issues:
@@ -297,13 +304,8 @@ html_B = f'''<!DOCTYPE html>
 # ---------- 写入 dist 目录 ----------
 os.makedirs('dist', exist_ok=True)
 with open('dist/index.html', 'w', encoding='utf-8') as f:
-    f.write(html_A)          # ⬅️ 主页使用 A 样式（精美卡片）
-with open('dist/card.html', 'w', encoding='utf-8') as f:
-    f.write(html_A)          # card.html 也是 A 样式（备用截图入口）
-
-with open('dist/index.html', 'w', encoding='utf-8') as f:
     f.write(html_B)          # ⬅️ 主页用 B 样式（用户扫码）
 with open('dist/card.html', 'w', encoding='utf-8') as f:
     f.write(html_A)          # ⬅️ card.html 用 A 样式（你截图）
 
-print("✅ 生成成功！已生成 index.html 和 card.html（均为 A 样式）")
+print("✅ 生成成功！已生成 index.html (B样式) 和 card.html (A样式)")
