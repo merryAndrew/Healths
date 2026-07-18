@@ -13,8 +13,6 @@ url = f'https://api.github.com/repos/{REPO}/issues?state=all&per_page=100'
 headers = {'Authorization': f'token {TOKEN}', 'Accept': 'application/vnd.github.v3+json'}
 issues = requests.get(url, headers=headers).json()
 
-print(f"📡 获取到 {len(issues)} 个 Issue")
-
 def extract_first_image(text):
     match = re.search(r'!\[.*?\]\((https?://[^\s]+)\)', text)
     if match:
@@ -42,7 +40,6 @@ def build_card(issue, style='A'):
     img_url = extract_first_image(all_text)
     if not img_url:
         img_url = 'https://via.placeholder.com/70x90?text=No+Photo'
-    print(f"📸 标题 '{title}' 的图片链接: {img_url}")
 
     name = title.split('_')[0] if '_' in title else title
     date_display = date.group(1) if date else '2026年7月15日 (有效期一年)'
@@ -53,8 +50,8 @@ def build_card(issue, style='A'):
     qr.save(buffered, format="PNG")
     qr_base64 = base64.b64encode(buffered.getvalue()).decode()
 
-    # 印章链接使用国内镜像
-    seal_url = "https://raw.kkgithub.com/merryAndrew/imge/main/than.png"
+    # 只改了这一行：镜像地址换成 jsdelivr
+    seal_url = "https://cdn.jsdelivr.net/gh/merryAndrew/imge/than.png"
 
     if style == 'A':
         return f'''
@@ -185,7 +182,6 @@ for issue in issues:
 cards_A.reverse()
 cards_B.reverse()
 
-# ========== A 样式（截图版）==========
 html_A = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -254,7 +250,6 @@ html_A = f'''<!DOCTYPE html>
 </body>
 </html>'''
 
-# B 样式（用户扫码版）
 html_B = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -316,9 +311,10 @@ html_B = f'''<!DOCTYPE html>
 </html>'''
 
 os.makedirs('dist', exist_ok=True)
+
 with open('dist/index.html', 'w', encoding='utf-8') as f:
     f.write(html_B)
 with open('dist/card.html', 'w', encoding='utf-8') as f:
     f.write(html_A)
 
-print("✅ 生成成功！已生成 index.html (B样式) 和 card.html (A样式)")
+print("✅ 生成成功！")
