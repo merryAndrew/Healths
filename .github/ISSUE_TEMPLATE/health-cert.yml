@@ -1,15 +1,7 @@
 name: 新增健康证
 description: 录入信息以生成新的健康证
-title: "[健康证] "
 labels: ["健康证"]
 body:
-  - type: input
-    id: name
-    attributes:
-      label: 姓名
-      placeholder: 请输入姓名
-    validations:
-      required: true
   - type: dropdown
     id: gender
     attributes:
@@ -30,7 +22,8 @@ body:
     id: exam_date
     attributes:
       label: 体检日期
-      placeholder: 例如 2026-07-18
+      placeholder: 例如 2026年7月15日 (有效期一年)
+      default: 2026年7月15日 (有效期一年)
     validations:
       required: true
   - type: textarea
