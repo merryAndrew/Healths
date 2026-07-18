@@ -1,0 +1,48 @@
+name: 新增健康证
+description: 录入信息以生成新的健康证
+title: "[健康证] "
+labels: ["健康证"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: 姓名
+      placeholder: 请输入姓名
+    validations:
+      required: true
+  - type: dropdown
+    id: gender
+    attributes:
+      label: 性别
+      options:
+        - 男
+        - 女
+    validations:
+      required: true
+  - type: input
+    id: id_number
+    attributes:
+      label: 身份证号码
+      placeholder: 请输入18位身份证号
+    validations:
+      required: true
+  - type: input
+    id: exam_date
+    attributes:
+      label: 体检日期
+      placeholder: 2026年7月15日 (有效期一年)
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: 标题（用于URL标识）
+      description: 建议格式：姓名_身份证后四位
+      placeholder: 例如 张三_1234
+    validations:
+      required: true
+  - type: textarea
+    id: body
+    attributes:
+      label: 备注信息（可选）
+      description: 其他需要补充的信息
