@@ -6,10 +6,21 @@ from datetime import datetime
 REPO = os.getenv('GITHUB_REPOSITORY')
 TOKEN = os.getenv('GITHUB_TOKEN')
 
+if not REPO or not TOKEN:
+    print("❌ 缺少环境变量 REPO 或 TOKEN")
+    exit(1)
+
 # 获取所有 Issue
 url = f'https://api.github.com/repos/{REPO}/issues?state=all&per_page=100'
-headers = {'Authorization': f'token {TOKEN}'}
-issues = requests.get(url, headers=headers).json()
+headers = {'Authorization': f'token {TOKEN}', 'Accept': 'application/vnd.github.v3+json'}
+try:
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    issues = response.json()
+except Exception as e:
+    print(f"❌ 获取 Issues 失败: {e}")
+    # 如果获取失败，生成一个空页面，避免部署失败
+    issues = []
 
 cards = []
 for issue in issues:
@@ -23,8 +34,9 @@ for issue in issues:
     date = re.search(r'体检日期[：:]\s*(.+)', body)
     id_num = re.search(r'身份证[：:]\s*(.+)', body)
 
+    # 提取第一张图片（证件照）
     img_match = re.search(r'!\[.*?\]\((https?://[^\s]+)\)', body)
-    img_url = img_match.group(1) if img_match else './one.jpg'
+    img_url = img_match.group(1) if img_match else 'https://via.placeholder.com/70x90?text=No+Photo'
 
     name = title.split('_')[0] if '_' in title else title
     date_display = date.group(1) if date else '未选择日期'
@@ -72,7 +84,11 @@ for issue in issues:
     '''
     cards.append(card)
 
-cards.reverse()
+cards.reverse()  # 最新的显示在前面
+
+# 如果没有任何卡片，显示提示信息
+if not cards:
+    cards.append('<div style="text-align:center;padding:40px;background:#fff;border-radius:12px;">暂无健康证数据，请新建 Issue 添加。</div>')
 
 html_template = f'''<!DOCTYPE html>
 <html lang="zh-CN">
