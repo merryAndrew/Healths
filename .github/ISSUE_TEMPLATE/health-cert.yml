@@ -22,8 +22,8 @@ body:
     id: exam_date
     attributes:
       label: 体检日期
-      placeholder: 例如 2026年7月15日 (有效期一年)
-      default: 2026年7月15日 (有效期一年)
+      description: 如果不修改，默认使用 2026年7月15日 (有效期一年)
+      placeholder: 2026年7月15日 (有效期一年)
     validations:
       required: true
   - type: textarea
