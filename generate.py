@@ -50,8 +50,8 @@ def build_card(issue, style='A'):
     qr.save(buffered, format="PNG")
     qr_base64 = base64.b64encode(buffered.getvalue()).decode()
 
-    # 只改了这一行：镜像地址换成 jsdelivr
-    seal_url = "https://cdn.jsdelivr.net/gh/merryAndrew/imge/than.png"
+    # ✅ 印章地址：GitHub 原生地址（没改过镜像的版本）
+    seal_url = "https://raw.githubusercontent.com/merryAndrew/imge/main/than.png"
 
     if style == 'A':
         return f'''
