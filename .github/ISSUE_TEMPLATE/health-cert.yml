@@ -30,15 +30,7 @@ body:
     id: exam_date
     attributes:
       label: 体检日期
-      placeholder: 2026年7月15日 (有效期一年)
-    validations:
-      required: true
-  - type: input
-    id: title
-    attributes:
-      label: 标题（用于URL标识）
-      description: 建议格式：姓名_身份证后四位
-      placeholder: 例如 张三_1234
+      placeholder: 例如 2026-07-18
     validations:
       required: true
   - type: textarea
