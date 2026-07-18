@@ -14,14 +14,14 @@ headers = {'Authorization': f'token {TOKEN}'}
 issues = requests.get(url, headers=headers).json()
 
 # ---------- 辅助函数：生成单张卡片 HTML（可切换样式） ----------
-def build_card(issue, style='B'):
+def build_card(issue, style='A'):
     title = issue['title']
     body = issue['body'] or ''
     gender = re.search(r'性别[：:]\s*(.+)', body)
     date = re.search(r'体检日期[：:]\s*(.+)', body)
     id_num = re.search(r'身份证[：:]\s*(.+)', body)
     img_match = re.search(r'!\[.*?\]\((https?://[^\s]+)\)', body)
-    img_url = img_match.group(1) if img_match else './one.jpg'  # 默认
+    img_url = img_match.group(1) if img_match else 'https://via.placeholder.com/70x90?text=No+Photo'
     name = title.split('_')[0] if '_' in title else title
     date_display = date.group(1) if date else '未选择日期 (有效期一年)'
 
@@ -297,8 +297,8 @@ html_B = f'''<!DOCTYPE html>
 # ---------- 写入 dist 目录 ----------
 os.makedirs('dist', exist_ok=True)
 with open('dist/index.html', 'w', encoding='utf-8') as f:
-    f.write(html_B)          # 主页面为 B 样式（用户扫码）
+    f.write(html_A)          # ⬅️ 主页使用 A 样式（精美卡片）
 with open('dist/card.html', 'w', encoding='utf-8') as f:
-    f.write(html_A)          # 截图专用页面（A 样式）
+    f.write(html_A)          # card.html 也是 A 样式（备用截图入口）
 
-print("✅ 生成成功！已生成 index.html (B样式) 和 card.html (A样式)")
+print("✅ 生成成功！已生成 index.html 和 card.html（均为 A 样式）")
