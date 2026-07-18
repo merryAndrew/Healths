@@ -301,4 +301,9 @@ with open('dist/index.html', 'w', encoding='utf-8') as f:
 with open('dist/card.html', 'w', encoding='utf-8') as f:
     f.write(html_A)          # card.html 也是 A 样式（备用截图入口）
 
+with open('dist/index.html', 'w', encoding='utf-8') as f:
+    f.write(html_B)          # ⬅️ 主页用 B 样式（用户扫码）
+with open('dist/card.html', 'w', encoding='utf-8') as f:
+    f.write(html_A)          # ⬅️ card.html 用 A 样式（你截图）
+
 print("✅ 生成成功！已生成 index.html 和 card.html（均为 A 样式）")
