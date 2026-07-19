@@ -1,4 +1,4 @@
-https://chat.deepseek.com/share/cuhu2mxbiepslooaz2import os
+import os
 import requests
 import re
 import qrcode
@@ -42,10 +42,16 @@ def build_card(issue, style='A'):
     img_url = extract_first_image(all_text)
     if not img_url:
         img_url = 'https://via.placeholder.com/70x90?text=No+Photo'
+    
+    # ===== 头像国内镜像加速（仅当来自 raw.githubusercontent.com） =====
+    if img_url and 'raw.githubusercontent.com' in img_url:
+        img_url = img_url.replace('https://raw.githubusercontent.com/', 'https://mirror.ghproxy.com/raw.githubusercontent.com/')
+    # ==================================================================
+
     print(f"📸 标题 '{title}' 的图片链接: {img_url}")
 
     name = title.split('_')[0] if '_' in title else title
-    date_display = date.group(1) if date else '2026年7月15日 (有效期一年)'
+    date_display = date.group(1) if date else '未选择日期 (有效期一年)'
 
     page_url = f'https://{USER}.github.io/Healths/?id={title}'
     qr = qrcode.make(page_url)
@@ -53,8 +59,9 @@ def build_card(issue, style='A'):
     qr.save(buffered, format="PNG")
     qr_base64 = base64.b64encode(buffered.getvalue()).decode()
 
-    # 印章链接使用国内镜像
-    seal_url = "https://raw.kkgithub.com/merryAndrew/imge/main/than.png"
+    # ===== 印章使用原始地址（不走镜像） =====
+    seal_url = 'https://raw.githubusercontent.com/merryAndrew/imge/main/than.png'
+    # ======================================
 
     if style == 'A':
         return f'''
@@ -185,14 +192,14 @@ for issue in issues:
 cards_A.reverse()
 cards_B.reverse()
 
-# ========== A 样式（截图版）==========
+# ========== A 样式（截图版）标题改为“健康证服务-证件查询” ==========
 html_A = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>健康证服务-证件查询</title>
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ font-family: "Microsoft Yahei", sans-serif; background-color: #e0d6c7; padding: 10px; min-height: 100vh; }}
@@ -254,14 +261,14 @@ html_A = f'''<!DOCTYPE html>
 </body>
 </html>'''
 
-# B 样式（用户扫码版）
+# B 样式（用户扫码版）标题保持“健康证查询”不变
 html_B = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>健康证查询</title>
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ font-family: "Microsoft Yahei", sans-serif; background-color: #e9e9e9; padding: 10px; }}
@@ -321,4 +328,4 @@ with open('dist/index.html', 'w', encoding='utf-8') as f:
 with open('dist/card.html', 'w', encoding='utf-8') as f:
     f.write(html_A)
 
-print("✅ 生成成功！已生成 index.html (B样式) 和 card.html (A样式)")
+print("✅ 生成成功！已生成 index.html (B样式) 和 card.html (A样式，标题已改为「健康证服务-证件查询」)")
