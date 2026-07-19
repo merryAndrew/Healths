@@ -88,10 +88,10 @@ def build_card(issue, style='A'):
                         </div>
                     </div>
                     <div class="photo">
-                        <div class="seal-container">
-                            <img class="seal-img" src="https://raw.githubusercontent.com/merryAndrew/imge/main/than.png" alt="印章图片">
-                        </div>
                         <img src="{img_url}" alt="持证人照片">
+                        <div class="seal-container">
+                            <img class="seal-img" src="https://raw.githubusercontent.com/merryAndrew/imge/main/than.png" alt="印章">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -194,8 +194,6 @@ html_A = f'''<!DOCTYPE html>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ font-family: "Microsoft Yahei", sans-serif; background-color: #e0d6c7; padding: 10px; min-height: 100vh; }}
         .app-wrapper {{ max-width: 450px; margin: 0 auto; }}
-        .photo .seal-container {{ position: absolute !important; top: 44px !important; left: -47px !important; z-index: 999 !important; }}
-        .photo .seal-img {{ width: 63px !important; height: 63px !important; object-fit: contain !important; opacity: 1 !important; display: block !important; }}
         .cert-module {{ background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 100%; height: 180px; }}
         .top-card {{ font-size: 11px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }}
         .top-title {{ text-align: center; font-size: 16px; color: #333; font-weight: bold; }}
@@ -205,8 +203,10 @@ html_A = f'''<!DOCTYPE html>
         .id-group {{ margin-bottom: 8px; }}
         .id-group .info-line {{ margin-bottom: 0; line-height: 1.2; }}
         .last-line {{ margin-bottom: 0; }}
-        .photo {{ width: 70px; height: 90px; border: 1px solid #ddd; margin-left: 10px; position: relative !important; overflow: visible !important; }}
-        .photo img[alt="持证人照片"] {{ width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 1; }}
+        .photo {{ position: relative; width: 70px; height: 90px; border: 1px solid #ddd; margin-left: 10px; overflow: visible; }}
+        .photo img[alt="持证人照片"] {{ width: 100%; height: 100%; object-fit: cover; display: block; }}
+        .seal-container {{ position: absolute; right: 0; bottom: 0; width: 30px; height: 30px; }}
+        .seal-img {{ width: 100%; height: 100%; object-fit: contain; opacity: 0.8; }}
         .middle-card {{ display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18px; color: #333; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }}
         .middle-line {{ margin: 5px 0; }}
         .bottom-card {{ background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 11px; }}
