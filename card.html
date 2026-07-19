@@ -6,48 +6,89 @@
     <title>健康证服务-证件查询</title>
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 强制禁用所有文本大小调整 */
-        html, body, * {
+        /* 最高权重锁定所有字体大小，禁止浏览器调整 */
+        * {
             -webkit-text-size-adjust: none !important;
             -moz-text-size-adjust: none !important;
             -ms-text-size-adjust: none !important;
             text-size-adjust: none !important;
+            font-size: 18px !important;  /* 强制所有元素基础字体为18px */
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* 重置部分元素字体大小，保持层级 */
         body {
             font-family: "Microsoft Yahei", sans-serif;
             background-color: #e0d6c7;
             padding: 10px;
             min-height: 100vh;
-            font-size: 16px;
+            font-size: 18px !important;
         }
         .app-wrapper { max-width: 450px; width: 100%; margin: 0 auto; }
         .cert-module { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 100%; height: 180px; }
-        .top-card { font-size: 11px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-        .top-title { text-align: center; font-size: 16px; color: #333; font-weight: bold; }
+        .top-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .top-title {
+            text-align: center;
+            font-size: 22px !important;
+            color: #333;
+            font-weight: bold;
+        }
         .top-content { display: flex; justify-content: space-between; align-items: flex-start; }
         .text-container { width: 65%; }
-        .info-line { margin-bottom: 8px; white-space: nowrap; display: flex; align-items: center; gap: 1px; }
-        .id-group { margin-bottom: 8px; }
-        .id-group .info-line { margin-bottom: 0; line-height: 1.2; }
+        .info-line {
+            margin-bottom: 10px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-size: 18px !important;
+        }
+        .id-group { margin-bottom: 10px; }
+        .id-group .info-line { margin-bottom: 0; line-height: 1.4; }
         .last-line { margin-bottom: 0; }
         .photo { position: relative; width: 70px; height: 90px; border: 1px solid #ddd; margin-left: 10px; overflow: visible; }
         .photo img[alt="持证人照片"] { width: 100%; height: 100%; object-fit: cover; display: block; }
         .seal-container { position: absolute; left: -47px; top: 44px; z-index: 999; width: 63px; height: 63px; transform: translateZ(0); }
         .seal-img { width: 100%; height: 100%; object-fit: contain; opacity: 1; display: block; }
-        .middle-card { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18px; color: #333; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .middle-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px !important;
+            color: #333;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
         .middle-line { margin: 5px 0; }
-        .bottom-card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 11px; }
+        .bottom-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 18px !important;
+        }
         .qrcode-area { text-align: center; margin-bottom: 15px; }
-        .qrcode-title { color: #333; margin-bottom: 10px; font-size: 13px; }
+        .qrcode-title { color: #333; margin-bottom: 10px; font-size: 18px !important; }
         .qrcode-img { width: 140px; height: 140px; margin: 0 auto; }
         .qrcode-img img { width: 100%; height: 100%; object-fit: contain; }
-        .notice { background-color: #fffbeb; border: 1px solid #ffeeba; border-radius: 8px; padding: 12px; font-size: 10px; }
-        .notice-title { color: #856404; font-weight: bold; margin-bottom: 6px; display: flex; align-items: center; }
-        .exclamation-icon { margin-right: 5px; font-size: 12px; }
-        .notice-content { color: #856404; line-height: 1.4; }
+        .notice { background-color: #fffbeb; border: 1px solid #ffeeba; border-radius: 8px; padding: 12px; font-size: 16px !important; }
+        .notice-title { color: #856404; font-weight: bold; margin-bottom: 6px; display: flex; align-items: center; font-size: 18px !important; }
+        .exclamation-icon { margin-right: 5px; font-size: 18px !important; }
+        .notice-content { color: #856404; line-height: 1.4; font-size: 16px !important; }
         .gender-separator { margin-left: 15px; }
         .cert-wrapper { margin-bottom: 20px; }
+        /* 修正个别内联样式覆盖 */
+        .info-line span {
+            font-size: 18px !important;
+        }
+        .info-line span[style*="font-weight: bold"] {
+            font-size: 18px !important;
+        }
     </style>
 </head>
 <body>
