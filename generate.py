@@ -53,6 +53,10 @@ def build_card(issue, style='A'):
     qr.save(buffered, format="PNG")
     qr_base64 = base64.b64encode(buffered.getvalue()).decode()
 
+    # ---------- 国内镜像资源 ----------
+    font_awesome_cdn = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
+    seal_img_url = 'https://mirror.ghproxy.com/raw.githubusercontent.com/merryAndrew/imge/main/than.png'
+
     if style == 'A':
         return f'''
         <div class="cert-wrapper" data-title="{title}">
@@ -89,7 +93,7 @@ def build_card(issue, style='A'):
                     </div>
                     <div class="photo">
                         <div class="seal-container">
-                            <img class="seal-img" src="https://raw.githubusercontent.com/merryAndrew/imge/main/than.png" alt="印章图片">
+                            <img class="seal-img" src="{seal_img_url}" alt="印章图片">
                         </div>
                         <img src="{img_url}" alt="持证人照片">
                     </div>
@@ -189,7 +193,7 @@ html_A = f'''<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>健康证服务-证件查询</title>
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{font_awesome_cdn}">
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ font-family: "Microsoft Yahei", sans-serif; background-color: #e0d6c7; padding: 10px; min-height: 100vh; }}
@@ -258,7 +262,7 @@ html_B = f'''<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>健康证查询</title>
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{font_awesome_cdn}">
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ font-family: "Microsoft Yahei", sans-serif; background-color: #e9e9e9; padding: 10px; }}
