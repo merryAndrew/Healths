@@ -1,3 +1,4 @@
+# 这是完整的 generate.py，直接复制替换
 import os
 import requests
 import re
@@ -182,7 +183,6 @@ for issue in issues:
 cards_A.reverse()
 cards_B.reverse()
 
-# ========== A 样式（截图版）标题改为“健康证服务-证件查询” ==========
 html_A = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -258,7 +258,6 @@ html_A = f'''<!DOCTYPE html>
 </body>
 </html>'''
 
-# B 样式（用户扫码版）标题保持“健康证查询”不变
 html_B = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
