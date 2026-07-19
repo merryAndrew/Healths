@@ -197,7 +197,6 @@ html_A = f'''<!DOCTYPE html>
             -moz-text-size-adjust: 100% !important;
             -ms-text-size-adjust: 100% !important;
             text-size-adjust: 100% !important;
-            -webkit-transform: scale(1) !important;
             transform: scale(1) !important;
             transform-origin: 0 0 !important;
         }}
@@ -217,7 +216,7 @@ html_A = f'''<!DOCTYPE html>
             -webkit-zoom: 1 !important;
         }}
         .app-wrapper {{
-            width: 430px;  /* 450 - 左右padding各10，实际内容宽度 */
+            width: 430px;
             max-width: 430px;
             min-width: 430px;
             margin: 0 auto;
@@ -290,7 +289,6 @@ html_A = f'''<!DOCTYPE html>
         .notice-content {{ color: #856404; line-height: 1.4; font-size: 10px !important; }}
         .gender-separator {{ margin-left: 15px; }}
         .cert-wrapper {{ margin-bottom: 20px; }}
-        /* 内联样式覆盖 */
         .info-line span {{
             font-size: 11px !important;
         }}
@@ -331,7 +329,7 @@ html_A = f'''<!DOCTYPE html>
 </body>
 </html>'''
 
-# B 样式保持不变（但为了统一，也适当加固）
+# B 样式保持不变（但为统一也做简单加固）
 html_B = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
