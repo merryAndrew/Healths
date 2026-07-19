@@ -60,9 +60,9 @@ def build_card(issue, style='A'):
     qr_base64 = base64.b64encode(buffered.getvalue()).decode()
 
     # ===== 印章国内镜像 =====
-    seal_url = 'https://mirror.ghproxy.com/raw.githubusercontent.com/merryAndrew/imge/main/than.png'
+   # seal_url = 'https://mirror.ghproxy.com/raw.githubusercontent.com/merryAndrew/imge/main/than.png'
     # ========================
-
+seal_url = 'https://raw.githubusercontent.com/merryAndrew/imge/main/than.png'
     if style == 'A':
         return f'''
         <div class="cert-wrapper" data-title="{title}">
