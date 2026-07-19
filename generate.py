@@ -205,8 +205,8 @@ html_A = f'''<!DOCTYPE html>
         .last-line {{ margin-bottom: 0; }}
         .photo {{ position: relative; width: 70px; height: 90px; border: 1px solid #ddd; margin-left: 10px; overflow: visible; }}
         .photo img[alt="持证人照片"] {{ width: 100%; height: 100%; object-fit: cover; display: block; }}
-        .seal-container {{ position: absolute; right: 0; bottom: 0; width: 30px; height: 30px; }}
-        .seal-img {{ width: 100%; height: 100%; object-fit: contain; opacity: 0.8; }}
+        .seal-container {{ position: absolute; top: 0; left: 0; z-index: 999; width: 63px; height: 63px; transform: translate(-47px, 44px); }}
+        .seal-img {{ width: 100%; height: 100%; object-fit: contain; opacity: 1; display: block; }}
         .middle-card {{ display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18px; color: #333; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }}
         .middle-line {{ margin: 5px 0; }}
         .bottom-card {{ background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 11px; }}
