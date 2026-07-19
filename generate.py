@@ -1,4 +1,3 @@
-# 这是完整的 generate.py，直接复制替换
 import os
 import requests
 import re
@@ -183,21 +182,15 @@ for issue in issues:
 cards_A.reverse()
 cards_B.reverse()
 
+# ========== A 样式（截图版）标题改为“健康证服务-证件查询” ==========
 html_A = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>健康证服务-证件查询</title>
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 强制锁定字体缩放，防止微信/QQ自动缩小 */
-        * {{
-            -webkit-text-size-adjust: 100% !important;
-            -moz-text-size-adjust: 100% !important;
-            -ms-text-size-adjust: 100% !important;
-            text-size-adjust: 100% !important;
-        }}
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ font-family: "Microsoft Yahei", sans-serif; background-color: #e0d6c7; padding: 10px; min-height: 100vh; }}
         .app-wrapper {{ max-width: 450px; margin: 0 auto; }}
@@ -258,21 +251,15 @@ html_A = f'''<!DOCTYPE html>
 </body>
 </html>'''
 
+# B 样式（用户扫码版）标题保持“健康证查询”不变
 html_B = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>健康证查询</title>
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 强制锁定字体缩放，防止微信/QQ自动缩小 */
-        * {{
-            -webkit-text-size-adjust: 100% !important;
-            -moz-text-size-adjust: 100% !important;
-            -ms-text-size-adjust: 100% !important;
-            text-size-adjust: 100% !important;
-        }}
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ font-family: "Microsoft Yahei", sans-serif; background-color: #e9e9e9; padding: 10px; }}
         .cert-wrapper {{ max-width: 450px; margin: 0 auto 20px auto; }}
