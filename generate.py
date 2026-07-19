@@ -182,34 +182,57 @@ for issue in issues:
 cards_A.reverse()
 cards_B.reverse()
 
-# ========== A 样式（截图版）字体强制锁定 ==========
+# ========== A 样式（截图版）强制锁定缩放和尺寸 ==========
 html_A = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=450, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <title>健康证服务-证件查询</title>
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 最高权重锁定所有字体大小，禁止浏览器调整 */
-        * {{
-            -webkit-text-size-adjust: none !important;
-            -moz-text-size-adjust: none !important;
-            -ms-text-size-adjust: none !important;
-            text-size-adjust: none !important;
-            font-size: 18px !important;  /* 强制所有元素基础字体为18px */
+        /* 最高权重锁定一切 */
+        html, body, * {{
+            -webkit-text-size-adjust: 100% !important;
+            -moz-text-size-adjust: 100% !important;
+            -ms-text-size-adjust: 100% !important;
+            text-size-adjust: 100% !important;
+            -webkit-transform: scale(1) !important;
+            transform: scale(1) !important;
+            transform-origin: 0 0 !important;
         }}
-        /* 重置部分元素字体大小，保持层级 */
-        body {{
-            font-family: "Microsoft Yahei", sans-serif;
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        html, body {{
+            width: 100%;
+            min-width: 450px;
+            overflow-x: auto;
             background-color: #e0d6c7;
+            font-family: "Microsoft Yahei", sans-serif;
+            font-size: 16px !important;
+        }}
+        body {{
             padding: 10px;
             min-height: 100vh;
-            font-size: 18px !important;
+            zoom: 1 !important;
+            -webkit-zoom: 1 !important;
         }}
-        .app-wrapper {{ max-width: 450px; width: 100%; margin: 0 auto; }}
-        .cert-module {{ background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 100%; height: 180px; }}
+        .app-wrapper {{
+            width: 430px;  /* 450 - 左右padding各10，实际内容宽度 */
+            max-width: 430px;
+            min-width: 430px;
+            margin: 0 auto;
+        }}
+        .cert-module {{
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 100%;
+            height: 180px;
+        }}
         .top-card {{
+            font-size: 11px !important;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -217,22 +240,22 @@ html_A = f'''<!DOCTYPE html>
         }}
         .top-title {{
             text-align: center;
-            font-size: 22px !important;
+            font-size: 16px !important;
             color: #333;
             font-weight: bold;
         }}
         .top-content {{ display: flex; justify-content: space-between; align-items: flex-start; }}
         .text-container {{ width: 65%; }}
         .info-line {{
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             white-space: nowrap;
             display: flex;
             align-items: center;
-            gap: 2px;
-            font-size: 18px !important;
+            gap: 1px;
+            font-size: 11px !important;
         }}
-        .id-group {{ margin-bottom: 10px; }}
-        .id-group .info-line {{ margin-bottom: 0; line-height: 1.4; }}
+        .id-group {{ margin-bottom: 8px; }}
+        .id-group .info-line {{ margin-bottom: 0; line-height: 1.2; }}
         .last-line {{ margin-bottom: 0; }}
         .photo {{ position: relative; width: 70px; height: 90px; border: 1px solid #ddd; margin-left: 10px; overflow: visible; }}
         .photo img[alt="持证人照片"] {{ width: 100%; height: 100%; object-fit: cover; display: block; }}
@@ -243,7 +266,7 @@ html_A = f'''<!DOCTYPE html>
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 26px !important;
+            font-size: 18px !important;
             color: #333;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
@@ -255,24 +278,27 @@ html_A = f'''<!DOCTYPE html>
             padding: 20px;
             margin-bottom: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            font-size: 18px !important;
+            font-size: 11px !important;
         }}
         .qrcode-area {{ text-align: center; margin-bottom: 15px; }}
-        .qrcode-title {{ color: #333; margin-bottom: 10px; font-size: 18px !important; }}
+        .qrcode-title {{ color: #333; margin-bottom: 10px; font-size: 13px !important; }}
         .qrcode-img {{ width: 140px; height: 140px; margin: 0 auto; }}
         .qrcode-img img {{ width: 100%; height: 100%; object-fit: contain; }}
-        .notice {{ background-color: #fffbeb; border: 1px solid #ffeeba; border-radius: 8px; padding: 12px; font-size: 16px !important; }}
-        .notice-title {{ color: #856404; font-weight: bold; margin-bottom: 6px; display: flex; align-items: center; font-size: 18px !important; }}
-        .exclamation-icon {{ margin-right: 5px; font-size: 18px !important; }}
-        .notice-content {{ color: #856404; line-height: 1.4; font-size: 16px !important; }}
+        .notice {{ background-color: #fffbeb; border: 1px solid #ffeeba; border-radius: 8px; padding: 12px; font-size: 10px !important; }}
+        .notice-title {{ color: #856404; font-weight: bold; margin-bottom: 6px; display: flex; align-items: center; font-size: 11px !important; }}
+        .exclamation-icon {{ margin-right: 5px; font-size: 12px !important; }}
+        .notice-content {{ color: #856404; line-height: 1.4; font-size: 10px !important; }}
         .gender-separator {{ margin-left: 15px; }}
         .cert-wrapper {{ margin-bottom: 20px; }}
-        /* 修正个别内联样式覆盖 */
+        /* 内联样式覆盖 */
         .info-line span {{
-            font-size: 18px !important;
+            font-size: 11px !important;
         }}
         .info-line span[style*="font-weight: bold"] {{
-            font-size: 18px !important;
+            font-size: 11px !important;
+        }}
+        .top-title, .middle-card, .middle-line {{
+            font-size: inherit !important;
         }}
     </style>
 </head>
@@ -305,28 +331,17 @@ html_A = f'''<!DOCTYPE html>
 </body>
 </html>'''
 
-# B 样式保持不变（也可类似加固，但您主要关心A）
+# B 样式保持不变（但为了统一，也适当加固）
 html_B = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <title>健康证查询</title>
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {{
-            -webkit-text-size-adjust: none !important;
-            -moz-text-size-adjust: none !important;
-            -ms-text-size-adjust: none !important;
-            text-size-adjust: none !important;
-        }}
-        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{
-            font-family: "Microsoft Yahei", sans-serif;
-            background-color: #e9e9e9;
-            padding: 10px;
-            font-size: 16px;
-        }}
+        * {{ margin: 0; padding: 0; box-sizing: border-box; -webkit-text-size-adjust: 100% !important; text-size-adjust: 100% !important; }}
+        body {{ font-family: "Microsoft Yahei", sans-serif; background-color: #e9e9e9; padding: 10px; font-size: 16px; }}
         .cert-wrapper {{ max-width: 450px; width: 100%; margin: 0 auto 20px auto; }}
         .cert-module {{ background: #f8f8f8; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.35); width: 100%; height: 180px; }}
         .top-card {{ font-size: 11px; display: flex; flex-direction: column; height: 100%; margin-top: 5px; }}
@@ -383,4 +398,4 @@ with open('dist/index.html', 'w', encoding='utf-8') as f:
 with open('dist/card.html', 'w', encoding='utf-8') as f:
     f.write(html_A)
 
-print("✅ 生成成功！已生成 index.html (B样式) 和 card.html (A样式，字体强制锁定为18px)")
+print("✅ 生成成功！已生成 index.html (B样式) 和 card.html (A样式，尺寸和字体已强制锁定)")
